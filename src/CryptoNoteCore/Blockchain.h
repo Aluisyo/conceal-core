@@ -264,6 +264,7 @@ bool rollbackBlockchainTo(uint32_t height);
 	UpgradeDetector m_upgradeDetectorV2;
 	UpgradeDetector m_upgradeDetectorV3;
   UpgradeDetector m_upgradeDetectorV4;
+  UpgradeDetector m_upgradeDetectorV7;  
 
     PaymentIdIndex m_paymentIdIndex;
     TimestampBlocksIndex m_timestampIndex;

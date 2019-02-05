@@ -318,7 +318,8 @@ m_is_in_checkpoint_zone(false),
 m_checkpoints(logger),
 m_upgradeDetectorV2(currency, m_blocks, BLOCK_MAJOR_VERSION_2, logger),
 m_upgradeDetectorV3(currency, m_blocks, BLOCK_MAJOR_VERSION_3, logger),
-m_upgradeDetectorV4(currency, m_blocks, BLOCK_MAJOR_VERSION_4, logger)
+m_upgradeDetectorV4(currency, m_blocks, BLOCK_MAJOR_VERSION_4, logger),
+m_upgradeDetectorV7(currency, m_blocks, BLOCK_MAJOR_VERSION_7, logger)
 {
 
   m_outputs.set_deleted_key(0);
@@ -477,6 +478,11 @@ bool Blockchain::init(const std::string& config_folder, bool load_existing) {
   }
 
   if (!m_upgradeDetectorV4.init()) {
+    logger(ERROR, BRIGHT_RED) << "<< Blockchain.cpp << " << "Failed to initialize upgrade detector";
+    return false;
+  }
+
+  if (!m_upgradeDetectorV7.init()) {
     logger(ERROR, BRIGHT_RED) << "<< Blockchain.cpp << " << "Failed to initialize upgrade detector";
     return false;
   }
@@ -715,6 +721,13 @@ difficulty_type Blockchain::getDifficultyForNextBlock() {
   uint32_t block_index = m_blocks.size();
   uint8_t block_major_version = get_block_major_version_for_height(block_index + 1);
 
+  // manual difficulty reset
+  uint32_t blockIndex = block_index + 1;
+  if (blockIndex >= 160552 && blockIndex < 161200) {
+   return 160;
+  }
+
+
   if (block_major_version == 4) {
     return m_currency.nextDifficultyLWMA3(timestamps, commulative_difficulties);
   } else {
@@ -754,7 +767,9 @@ difficulty_type Blockchain::difficultyAtHeight(uint64_t height) {
 }
 
 uint8_t Blockchain::get_block_major_version_for_height(uint64_t height) const {
-  if (height > m_upgradeDetectorV4.upgradeHeight()) {
+  if (height > m_upgradeDetectorV7.upgradeHeight()) {
+    return m_upgradeDetectorV7.targetVersion();
+  } else if (height > m_upgradeDetectorV4.upgradeHeight()) {
     return m_upgradeDetectorV4.targetVersion();
   } else if (height > m_upgradeDetectorV3.upgradeHeight()) {
     return m_upgradeDetectorV3.targetVersion();
@@ -961,6 +976,12 @@ difficulty_type Blockchain::get_next_difficulty_for_alternative_chain(const std:
 
   uint32_t block_index = m_blocks.size();
   uint8_t block_major_version = get_block_major_version_for_height(block_index + 1);
+
+  // manual difficulty reset
+  uint32_t blockIndex = block_index + 1;
+  if (blockIndex >= 160552 && blockIndex < 161200) {
+   return 160;
+  }
 
   if (block_major_version == 4) {
     return m_currency.nextDifficultyLWMA3(timestamps, commulative_difficulties);
