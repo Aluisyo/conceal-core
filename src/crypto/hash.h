@@ -20,21 +20,6 @@
 #define CN_FAST_SCRATCHPAD              2097152
 #define CN_FAST_ITERATIONS              524288
 
-/* Cryptonight Lite */
-#define CN_LITE_PAGE_SIZE               2097152
-#define CN_LITE_SCRATCHPAD              1048576
-#define CN_LITE_ITERATIONS              524288
-
-/* Cryptonight Dark */
-#define CN_DARK_PAGE_SIZE               524288
-#define CN_DARK_SCRATCHPAD              524288
-#define CN_DARK_ITERATIONS              262144
-
-/* Cryptonight Turtle */
-#define CN_TURTLE_PAGE_SIZE             262144
-#define CN_TURTLE_SCRATCHPAD            262144
-#define CN_TURTLE_ITERATIONS            131072
-
 namespace Crypto {
 
   extern "C" {
