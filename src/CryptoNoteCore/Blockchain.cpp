@@ -728,7 +728,7 @@ difficulty_type Blockchain::getDifficultyForNextBlock() {
   }
 
 
-  if (block_major_version == 4) {
+  if (block_major_version >= 4) {
     return m_currency.nextDifficultyLWMA3(timestamps, commulative_difficulties);
   } else {
     return m_currency.nextDifficulty(block_major_version, block_index, timestamps, commulative_difficulties);
@@ -983,7 +983,7 @@ difficulty_type Blockchain::get_next_difficulty_for_alternative_chain(const std:
    return 160;
   }
 
-  if (block_major_version == 4) {
+  if (block_major_version >= 4) {
     return m_currency.nextDifficultyLWMA3(timestamps, commulative_difficulties);
   } else {
     return m_currency.nextDifficulty(block_major_version, block_index, timestamps, commulative_difficulties);
