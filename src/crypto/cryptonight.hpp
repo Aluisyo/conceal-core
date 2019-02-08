@@ -220,7 +220,7 @@ void cn_implode_scratchpad(const __m128i* input, __m128i* output)
 inline void cryptonight_monero_tweak(uint64_t* mem_out, __m128i tmp)
 {
 	mem_out[0] = _mm_cvtsi128_si64(tmp);
-	tmp = (__m128i)_mm_movehl_ps((__m128)tmp, (__m128)tmp);
+	tmp = _mm_castps_si128(_mm_movehl_ps(_mm_castsi128_ps(tmp), _mm_castsi128_ps(tmp)));
 	uint64_t vh = _mm_cvtsi128_si64(tmp);
 	uint8_t x = vh >> 24;
 	static const uint16_t table = 0x7531;
